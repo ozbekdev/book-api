@@ -10,7 +10,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 readonly class UserFactory
 {
 
-    public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
     /**
      * @throws \DateMalformedStringException
@@ -23,8 +25,7 @@ readonly class UserFactory
         int $age,
         string $gender,
         string $phone
-    ): User
-    {
+    ): User {
         $user = new User();
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);

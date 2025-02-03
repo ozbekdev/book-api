@@ -36,7 +36,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
-
 #[ApiFilter(SearchFilter::class, properties: [
     'id' => 'exact',
     'firstName' => 'partial',
@@ -44,14 +43,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     'email' => 'exact',
     'phone' => 'start'
 ])]
-
 #[UniqueEntity(fields: ['email'], message: "Bu email avval foydalanilgan")]
-
-
 #[ApiFilter(DateFilter::class, properties: [
     'createdAt' => 'desc',
 ])]
-
 class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

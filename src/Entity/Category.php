@@ -27,13 +27,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['category:read']],
     denormalizationContext: ['groups' => ['category:write']],
 )]
-
 #[ApiFilter(SearchFilter::class, properties: [
     'id' => 'exact',
     'categoryName' => 'partial'
 ])]
-
-
 class Category
 {
     #[ORM\Id]
