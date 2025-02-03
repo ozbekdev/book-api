@@ -2,13 +2,46 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(),
+        new Delete()
+    ],
+
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']],
+)]
+
+#[ApiFilter(SearchFilter::class, properties: [
+    'id' => 'exact',
+    'firstName' => 'partial',
+    'lastName' => 'partial',
+    'email' => 'exact',
+    'phone' => 'start'
+])]
+
+
+#[ApiFilter(DateFilter::class, properties: [
+    'createdAt' => 'desc',
+])]
+
 class User
 {
     #[ORM\Id]
@@ -17,24 +50,43 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank(message: "Email kiriting")]
+    #[Assert\Email(message: "To'g'ri email kiriting")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:write'])]
+    #[Assert\NotBlank(message: "Parol kiriting")]
+    #[Assert\Length(min: 8, minMessage: "Parol kamida 8 ta belgidan iborat bo'lishi kerak")]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank(message: "Ismingizni kiriting")]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank(message: "Familiyangizni kiriting")]
     private ?string $lastName = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $age = null;
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank(message: "Yoshingizni kiriting")]
+    #[Assert\Range(minMessage: "Yoshingiz kamida 16 da bo'lishi kerak", min: 16)]
+    private ?int $age = 16;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank(message: "Jinsingizni belgilang")]
+    #[Assert\Choice(['male', 'female'])]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    #[Assert\NotBlank(message: "Telefon raqamingizni kiriting")]
+    #[Assert\Length(min: 9, minMessage: "Telefon raqam kamida 9 ta raqamdan iborat bo'lishi kerak")]
     private ?string $phone = null;
 
     #[ORM\Column]
