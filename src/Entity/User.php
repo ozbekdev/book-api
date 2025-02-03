@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,6 +37,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     'email' => 'exact',
     'phone' => 'start'
 ])]
+
+#[UniqueEntity(fields: ['email'], message: "Bu email avval foydalanilgan")]
 
 
 #[ApiFilter(DateFilter::class, properties: [
