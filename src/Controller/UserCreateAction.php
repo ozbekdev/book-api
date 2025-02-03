@@ -9,11 +9,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserCreateAction extends AbstractController
 {
+    public function __construct(
+        private readonly UserFactory $userFactory,
+    ) {}
+
+    /**
+     * @throws \DateMalformedStringException
+     */
     #[NoReturn] public function __invoke(User $user): User
     {
-        $userFactory = new UserFactory();
 
-        $user = $userFactory->create(
+        $user = $this->userFactory->create(
             $user->getFirstName(),
             $user->getLastName(),
             $user->getEmail(),
@@ -22,7 +28,7 @@ class UserCreateAction extends AbstractController
             $user->getGender(),
             $user->getPhone()
         );
-
-        return $user;
+        print_r($user);
+        exit;
     }
 }
