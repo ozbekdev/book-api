@@ -43,7 +43,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     'email' => 'exact',
     'phone' => 'start'
 ])]
-#[UniqueEntity(fields: ['email'], message: "Bu email avval foydalanilgan")]
+
+
+//#[UniqueEntity(fields: ['email'], message: "Bu email avval foydalanilgan")]
+#[UniqueEntity('email', message: "Bu email avval ishlatilgan")]
+
 #[ApiFilter(DateFilter::class, properties: [
     'createdAt' => 'desc',
 ])]
