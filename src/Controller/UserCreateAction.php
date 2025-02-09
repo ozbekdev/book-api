@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\User;
 use App\Factory\UserFactory;
 use App\Manager\UserManager;
@@ -13,6 +14,7 @@ class UserCreateAction extends AbstractController
     public function __construct(
         private readonly UserFactory $userFactory,
         private readonly UserManager $userManager,
+        private readonly ValidatorInterface $validator
     ) {
     }
 
@@ -21,6 +23,8 @@ class UserCreateAction extends AbstractController
      */
     #[NoReturn] public function __invoke(User $user): User
     {
+        $this->validator->validate($user);
+
         $user = $this->userFactory->create(
             $user->getFirstName(),
             $user->getLastName(),
@@ -33,7 +37,6 @@ class UserCreateAction extends AbstractController
 
         $this->userManager->createUser($user, true);
 
-        print_r($user);
-        exit;
+        return $user;
     }
 }
